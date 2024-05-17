@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">vet_app</string>
+    <string name="cancel_button"> Cancelar</string>
+    <string name="ok_button">ok</string>
+    // home screen strings
+    <string name="new_pet_button">Agregar Mascota</string>
+    <string name="order_by_button">ordenar por:</string>
+    // new pet screen strings
+    <string name="pet_name">Nombre</string>
+    <string name="pet_type">Tipo de mascota</string>
+    <string name="pet_age">Edad (en meses)</string>
+    <string name="pet_breed">Raza</string>
+    <string name="photo_button">Foto</string>
+    <string name="save_button">Guardar</string>
+    // pet details strings
+    <string name="go_to_list_button">Ir a la listas</string>
+
+
 </resources>
