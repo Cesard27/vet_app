@@ -41,7 +41,8 @@ const upload = multer({ storage: storage });
 app.use(express.json());
 
 // Service 1: Store a pet
-app.post('/pets', upload.single('image'), (req, res) => {
+
+/*app.post('/pets', upload.single('image'), (req, res) => {
   const { type, name, age, breed } = req.body;
   const image = req.file.filename;
 
@@ -51,6 +52,25 @@ app.post('/pets', upload.single('image'), (req, res) => {
       return res.status(500).json({ error: err.message });
     }
     res.status(201).json({ message: 'Pet stored successfully' });
+  });
+});
+*/
+
+app.post('/pets', upload.single('image'), (req, res) => {
+  const { type, name, age, breed } = req.body;
+  const image = req.file.filename;
+
+  const query = 'INSERT INTO pets (type, name, age, breed, image) VALUES (?, ?, ?, ?, ?)';
+  db.query(query, [type, name, age, breed, image], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+      console.log(res.status(500).json({ error: err.message }))
+    }
+
+    // Obtener el ID del registro insertado
+    const newPetId = results.insertId;
+
+    res.status(201).json({ message: 'Pet stored successfully', petId: newPetId });
   });
 });
 

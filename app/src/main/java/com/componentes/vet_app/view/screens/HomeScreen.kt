@@ -67,9 +67,9 @@ fun HomeScreen(navController: NavController) {
             Spacer(modifier = Modifier.padding(vertical = 26.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                textContent("Order by: ", false)
+                //textContent("Order by: ", false)
                 Spacer(modifier = Modifier.padding(horizontal = 10.dp))
-                dropDownMenu()
+                //dropDownMenu()
             }
 
             Spacer(modifier = Modifier.padding(vertical = 8.dp))

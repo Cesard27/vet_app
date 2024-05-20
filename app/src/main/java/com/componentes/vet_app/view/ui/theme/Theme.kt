@@ -117,6 +117,38 @@ val gradientButtonDiag = object : ShaderBrush() {
 }
 
 @Composable
+fun ButtonSaveComponent(column: Int,text: String, white: Boolean, value: String, navController: NavController, onClick: ()->Unit){
+    var modifier: Modifier = Modifier
+    if (column == 1){
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(48.dp)
+    }else if(column == 2){
+        modifier = Modifier
+            .width(180.dp)
+            .heightIn(48.dp)
+    }
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        contentPadding = PaddingValues(),
+        colors = ButtonDefaults.buttonColors(Color.Transparent)
+    ){
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(48.dp)
+                .background(
+                    brush = gradientButtonNav,
+                    shape = RoundedCornerShape(25.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ){
+            textContent(text = text, white)
+        }
+    }
+}
+@Composable
 fun navButton(navController: NavController, route: String, column: Int, text: String, white: Boolean){
 
     var modifier: Modifier = Modifier
@@ -241,11 +273,13 @@ fun colorSelection(white: Boolean) : Color{
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun dropDownMenu(list : List<String> = listOf("op4","op3","op2","op1")){
+fun dropDownMenu(
+    list : List<String> = listOf("op4","op3","op2","op1"),
+    selectedValue: String,
+    onValueChange: (String) -> Unit
+){
 
     var isExpanded by remember { mutableStateOf(false) }
-
-    var selectedText by remember { mutableStateOf(list[0]) }
 
     ExposedDropdownMenuBox(
         expanded = isExpanded,
@@ -253,7 +287,7 @@ fun dropDownMenu(list : List<String> = listOf("op4","op3","op2","op1")){
     ){
         TextField(
             modifier = Modifier.menuAnchor(),
-            value = selectedText,
+            value = selectedValue,
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
@@ -269,7 +303,7 @@ fun dropDownMenu(list : List<String> = listOf("op4","op3","op2","op1")){
                 DropdownMenuItem(
                     text = { textSpecs(text = text, true) },
                     onClick = {
-                        selectedText = list[index]
+                        onValueChange(list[index])
                         isExpanded = false
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -281,14 +315,17 @@ fun dropDownMenu(list : List<String> = listOf("op4","op3","op2","op1")){
 }
 
 @Composable
-fun customTextField(){
-
-    var text by remember { mutableStateOf(TextFieldValue()) }
+fun customTextField(
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    var text by remember { mutableStateOf(TextFieldValue(value)) }
 
     OutlinedTextField(
         value = text,
         onValueChange = {
             text = it
+            onValueChange(it.text)
         },
         shape = RoundedCornerShape(50.dp),
         modifier = Modifier.fillMaxWidth()
