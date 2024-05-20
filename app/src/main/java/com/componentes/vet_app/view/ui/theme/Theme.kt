@@ -157,9 +157,9 @@ fun navButton(navController: NavController, route: String, column: Int, text: St
 }
 
 @Composable
-fun customButton(text: String, white: Boolean, content: @Composable () -> Unit){
+fun customButton(text: String, white: Boolean, onClick: () -> Unit){
     Button(
-        onClick = {},
+        onClick = onClick, // Aquí se especifica la acción a realizar cuando se hace clic en el botón
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp),
@@ -180,6 +180,7 @@ fun customButton(text: String, white: Boolean, content: @Composable () -> Unit){
         }
     }
 }
+
 
 
 // Components for text

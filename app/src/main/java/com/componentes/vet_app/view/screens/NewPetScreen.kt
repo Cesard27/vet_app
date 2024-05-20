@@ -1,20 +1,29 @@
 package com.componentes.vet_app.view.screens
 
 import android.content.Context
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.componentes.vet_app.R
 import com.componentes.vet_app.view.model.Pet
 import com.componentes.vet_app.view.model.connect.PetService
@@ -28,43 +37,54 @@ import kotlinx.coroutines.launch
 @Composable
 fun NewPetScreen(navController: NavController){
 
+    val typeList = listOf(
+        "Perros",
+        "Gatos",
+        "Peces",
+        "Roedores",
+        "Anfibios",
+        "Reptiles",
+        "Áves",
+        "Artrópodos"
+    )
+
     var petName by remember { mutableStateOf("") }
     var petType by remember { mutableStateOf("") }
     var petAge by remember { mutableStateOf("") }
     var petBreed by remember { mutableStateOf("") }
     var selectedImage by remember { mutableStateOf("") }
-
-
-
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
-            selectedImage = it.toString() // Guardar la URI de la imagen seleccionada
+            selectedImageUri = it
         }
     }
 
-    // Función para guardar una nueva mascot
     fun savePet() {
         val newPet = Pet(
             type = petType,
             name = petName,
             age = petAge.toIntOrNull() ?: 0,
             breed = petBreed,
-            image = "placeholder.jpg",
-            id = 1
+            image = selectedImage,
+            id = 0
         )
         val petService = RetrofitClient.instance.create(PetService::class.java)
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = petService.storePet(newPet)
                 if (response.isSuccessful) {
-                    // Mascota almacenado exitosamente
+                    // Mascota almacenada exitosamente
                     navController.navigate(Screen.PetDetails.route)
+                    Log.d("bd", "Great!!!!!")
                 } else {
-                    // Manejar el error
+                    //Toast.makeText(LocalContext.current, "Error al almacenar la mascota", Toast.LENGTH_SHORT).show()
+                    Log.d("bd", "Error al almacenar la mascota")
                 }
             } catch (e: Exception) {
-                // Manejar la excepción
+                //Toast.makeText(LocalContext.current, "Error al almacenar la mascota", Toast.LENGTH_SHORT).show()
+                Log.d("bd", "Error al almacenar la mascota")
             }
         }
     }
@@ -86,7 +106,7 @@ fun NewPetScreen(navController: NavController){
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             //pet type
             textContent(stringResource(R.string.pet_type), false)
-            dropDownMenu()
+            dropDownMenu(typeList)
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             //pet age
             textContent(stringResource(R.string.pet_age), false)
@@ -94,7 +114,7 @@ fun NewPetScreen(navController: NavController){
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             // pet breed
             textContent(stringResource(R.string.pet_breed), false)
-            dropDownMenu()
+            customTextField()
             Spacer(modifier = Modifier.padding(vertical = 15.dp))
             //photo button
             customButton(
@@ -102,8 +122,21 @@ fun NewPetScreen(navController: NavController){
                 white = true
             ) {
                 getContent.launch("image/*")
-                //Toast.makeText(LocalContext.current, "photo", Toast.LENGTH_SHORT).show()
             }
+
+            // Mostrar la imagen seleccionada (si hay una)
+            selectedImageUri?.let { uri ->
+                Image(
+                    painter = rememberAsyncImagePainter(uri),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(shape = RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+
             //save cancel buttons
 
             Spacer(modifier = Modifier.padding(vertical = 8.dp))
@@ -120,11 +153,8 @@ fun NewPetScreen(navController: NavController){
                     route = Screen.Home.route,
                     navController = navController,
                     text = stringResource(R.string.cancel_button), white = true)
-
             }
         }
-
-
     }
 
 }
