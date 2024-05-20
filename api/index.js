@@ -102,6 +102,26 @@ app.get('/pets/filter', (req, res) => {
   });
 });
 
+//find by id
+app.get('/pets/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'SELECT * FROM pets WHERE id = ?';
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'Pet not found' });
+    }
+
+    const pet = results[0];
+    pet.image = `http://${req.headers.host}/uploads/${pet.image}`;
+    res.json(pet);
+  });
+});
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

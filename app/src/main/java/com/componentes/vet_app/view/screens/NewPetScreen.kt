@@ -1,16 +1,15 @@
 package com.componentes.vet_app.view.screens
 
 import android.content.Context
-import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -25,8 +24,6 @@ import com.componentes.vet_app.view.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun NewPetScreen(navController: NavController){
@@ -35,8 +32,18 @@ fun NewPetScreen(navController: NavController){
     var petType by remember { mutableStateOf("") }
     var petAge by remember { mutableStateOf("") }
     var petBreed by remember { mutableStateOf("") }
+    var selectedImage by remember { mutableStateOf("") }
 
-    // Función para guardar una nueva mascota
+
+
+
+    val getContent = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            selectedImage = it.toString() // Guardar la URI de la imagen seleccionada
+        }
+    }
+
+    // Función para guardar una nueva mascot
     fun savePet() {
         val newPet = Pet(
             type = petType,
@@ -46,9 +53,7 @@ fun NewPetScreen(navController: NavController){
             image = "placeholder.jpg",
             id = 1
         )
-
         val petService = RetrofitClient.instance.create(PetService::class.java)
-
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = petService.storePet(newPet)
@@ -95,7 +100,10 @@ fun NewPetScreen(navController: NavController){
             customButton(
                 text = stringResource(R.string.photo_button),
                 white = true
-            ) { Toast.makeText(LocalContext.current, "photo", Toast.LENGTH_SHORT).show() }
+            ) {
+                getContent.launch("image/*")
+                //Toast.makeText(LocalContext.current, "photo", Toast.LENGTH_SHORT).show()
+            }
             //save cancel buttons
 
             Spacer(modifier = Modifier.padding(vertical = 8.dp))

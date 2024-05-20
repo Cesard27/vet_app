@@ -27,10 +27,9 @@ fun SetupNavGraph(
         ){
             NewPetScreen(navController = navController)
         }
-        composable(
-            route = Screen.PetDetails.route
-        ){
-            PetDetailsScreen(navController = navController)
+        composable(Screen.PetDetails.route + "/{petId}") { backStackEntry ->
+            val petId = backStackEntry.arguments?.getString("petId") ?: return@composable
+            PetDetailsScreen(navController = navController, petId = petId.toInt())
         }
 
     }

@@ -159,7 +159,7 @@ fun navButton(navController: NavController, route: String, column: Int, text: St
 @Composable
 fun customButton(text: String, white: Boolean, content: @Composable () -> Unit){
     Button(
-        onClick = {content},
+        onClick = {},
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(48.dp),
