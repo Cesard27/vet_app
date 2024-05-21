@@ -8,13 +8,17 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -24,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.componentes.vet_app.R
-import com.componentes.vet_app.view.model.Pet
-import com.componentes.vet_app.view.model.connect.PetService
-import com.componentes.vet_app.view.model.connect.RetrofitClient
+import com.componentes.vet_app.model.Pet
+import com.componentes.vet_app.model.connect.PetService
+import com.componentes.vet_app.model.connect.RetrofitClient
 import com.componentes.vet_app.view.navigation.Screen
 import com.componentes.vet_app.view.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
@@ -139,31 +143,37 @@ fun NewPetScreen(navController: NavController) {
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
             .background(gradientBackground)
-            .padding(horizontal = 35.dp, vertical = 80.dp),
+            .fillMaxSize()
+            .padding(top = 80.dp, bottom = 40.dp, start = 35.dp, end = 35.dp)
+            .verticalScroll(rememberScrollState()),
     ) {
         Column() {
             //title
             textTitle(stringResource(R.string.new_pet_button), false)
             Spacer(modifier = Modifier.padding(vertical = 30.dp))
+
             //pet name
             textContent(stringResource(R.string.pet_name), false)
             customTextField(value = petName, onValueChange = { petName = it })
-            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Spacer(modifier = Modifier.padding(vertical = 15.dp))
+
             //pet type
             textContent(stringResource(R.string.pet_type), false)
             dropDownMenu(list = typeList,selectedValue = selectedType,onValueChange = { selectedType = it }
             )
-            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Spacer(modifier = Modifier.padding(vertical = 15.dp))
+
             //pet age
             textContent(stringResource(R.string.pet_age), false)
             customTextField(value = petAge, onValueChange = { petAge = it })
-            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Spacer(modifier = Modifier.padding(vertical = 15.dp))
+
             // pet breed
             textContent(stringResource(R.string.pet_breed), false)
             customTextField(value = petBreed, onValueChange = { petBreed = it })
-            Spacer(modifier = Modifier.padding(vertical = 15.dp))
+            Spacer(modifier = Modifier.padding(vertical = 30.dp))
+
             //photo button
             customButton(
                 text = stringResource(R.string.photo_button),
@@ -174,19 +184,22 @@ fun NewPetScreen(navController: NavController) {
 
             // Mostrar la imagen seleccionada (si hay una)
             selectedImageUri?.let { uri ->
-                Image(
-                    painter = rememberAsyncImagePainter(uri),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(shape = RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                Box(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)){
+                    Image(
+                        painter = rememberAsyncImagePainter(uri),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(200.dp)
+                            .clip(shape = RoundedCornerShape(8.dp))
+                            .padding(top = 15.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
             //save cancel buttons
 
-            Spacer(modifier = Modifier.padding(vertical = 8.dp))
+            Spacer(modifier = Modifier.padding(vertical = 15.dp))
 
             Row {
                 ButtonSaveComponent(

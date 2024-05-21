@@ -20,9 +20,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.componentes.vet_app.R
-import com.componentes.vet_app.view.model.Pet
-import com.componentes.vet_app.view.model.connect.PetService
-import com.componentes.vet_app.view.model.connect.RetrofitClient
+import com.componentes.vet_app.model.Pet
+import com.componentes.vet_app.model.connect.PetService
+import com.componentes.vet_app.model.connect.RetrofitClient
 import com.componentes.vet_app.view.navigation.Screen
 import com.componentes.vet_app.view.ui.theme.*
 import kotlinx.coroutines.launch

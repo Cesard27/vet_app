@@ -1,8 +1,8 @@
-package com.componentes.vet_app.view.model.connect
+package com.componentes.vet_app.model.connect
 
 import android.content.Context
 import android.net.Uri
-import com.componentes.vet_app.view.model.Pet
+import com.componentes.vet_app.model.Pet
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

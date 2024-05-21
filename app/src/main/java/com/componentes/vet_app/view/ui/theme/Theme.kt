@@ -58,7 +58,7 @@ fun Vet_appTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) dynamicLightColorScheme(context) else dynamicLightColorScheme(context)
         }
 
         darkTheme -> DarkColorScheme
@@ -286,7 +286,7 @@ fun dropDownMenu(
         onExpandedChange = {isExpanded = !isExpanded},
     ){
         TextField(
-            modifier = Modifier.menuAnchor(),
+            modifier = Modifier.menuAnchor().fillMaxWidth(),
             value = selectedValue,
             onValueChange = {},
             readOnly = true,

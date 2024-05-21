@@ -1,4 +1,4 @@
-package com.componentes.vet_app.view.model
+package com.componentes.vet_app.model
 
 data class Pet(
     val id: Int,

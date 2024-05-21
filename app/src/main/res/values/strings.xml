@@ -14,6 +14,10 @@
     <string name="save_button">Guardar</string>
     // pet details strings
     <string name="go_to_list_button">Ir a la listas</string>
+    <string name="pet_detail_name">Nombre:</string>
+    <string name="pet_detail_type">Tipo de mascota:</string>
+    <string name="pet_detail_age">Edad en meses:</string>
+    <string name="pet_detail_breed">Raza:</string>
 
 
 </resources>

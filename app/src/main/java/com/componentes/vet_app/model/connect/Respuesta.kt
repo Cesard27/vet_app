@@ -1,4 +1,4 @@
-package com.componentes.vet_app.view.model.connect
+package com.componentes.vet_app.model.connect
 
 data class Respuesta(
     val message: String,
